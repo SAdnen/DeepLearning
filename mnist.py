@@ -25,16 +25,18 @@ x = sampleimage.reshape([1, 28, 28, 1])
 
 X = tf.placeholder(tf.float32, shape=(1, 28, 28, 1), name="Input_Image")
 W1 = tf.Variable(tf.truncated_normal((5, 5, 1, 1), stddev=0.1))
-b1 = tf.Variable(tf.zeros(32, 1))
+b1 = tf.Variable(tf.zeros(1, 1))
 
 # %% Define first confolutional layer
 
-Conv1 = tf.nn.conv2d(X, W1, strides=[1, 1, 1, 1], paddin='SAME') + b1
+Conv1 = tf.nn.conv2d(X, W1, strides=[1, 1, 1, 1], padding='SAME') + b1
 Conv1out = tf.nn.relu(Conv1)
+Maxpl1 = tf.nn.max_pool(Conv1out, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1],
+                        padding="SAME")
 init = tf.global_variables_initializer()
-with tf.Session as sess:
+with tf.Session() as sess:
     sess.run(init)
-    result = sess.run(Conv1out, feed_dict={X: x})
+    result = sess.run(Maxpl1, feed_dict={X: x})
 
 
 
